@@ -59,7 +59,7 @@
 
   var src = editorURL + "?url=" + encodeURIComponent(getCanonicalURL());
   var iframe = document.createElement('iframe');
-  // iframe.setAttribute('src', src);
+  iframe.setAttribute('src', src);
   iframe.setAttribute('id', 'klaxon-bookmarklet-iframe');
   iframe.setAttribute('frameborder', 0);
   iframe.style.top = '0px';
