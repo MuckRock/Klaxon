@@ -37,9 +37,9 @@ Next, publish the bookmarklet to a publicly accessible location (e.g. S3, GCS, y
 Modify bookmarklet/inject.js to replace all three of the klaxon.html references at the [top of the file](https://github.com/MuckRock/Klaxon/blob/89df26a6ea4433765cc3402c76335b9209cd4e90/bookmarklet/inject.js#L2) with your own. <br>
 Publish the Javascript inject.js file to a publcly accessible location. <br>
 
-Finally, modify the bookmarklet code in your browser (or create a separate bookmarklet) to reference your custom inject.js file instead. <br>
+Finally, modify the bookmarklet code in your browser (or create a separate bookmarklet) to reference your custom inject.js file instead. <br> <br>
 
-Your "Add to Klaxon" bookmarklet will now work the same but send monitoring jobs to your forked add-on instead of the default MuckRock add-on. <br>
+Your "Add to Klaxon" bookmarklet will now work the same but send monitoring jobs to your forked add-on instead of the default MuckRock add-on. <br> <br>
 
 # Notes on rate-limiting
 
