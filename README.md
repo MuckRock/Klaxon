@@ -24,27 +24,27 @@ The secrets should be named:
 ```SAVEPAGENOW_ACCESS_KEY```
 ```SAVEPAGENOW_SECRET_KEY```
 
-Enable GitHub action workflows on your fork (navigate to "Actions" on the repository and enable)
-Follow the [DocumentCloud Add-On instructions](https://github.com/MuckRock/documentcloud-hello-world-addon/wiki/#run-your-add-on-in-documentcloud) to authorize your forked add-on within DocumentCloud.
+Enable GitHub action workflows on your fork (navigate to "Actions" on the repository and enable). <br>
+Follow the [DocumentCloud Add-On instructions](https://github.com/MuckRock/documentcloud-hello-world-addon/wiki/#run-your-add-on-in-documentcloud) to authorize your forked add-on within DocumentCloud. <br>
 
-At this point, the forked add-on will appear when you browse in DC, but will be identically named; you can distinguish your version by looking at "Created By" when opening the add-on or check the URI fragment.
-You can manually configure monitoring tasks from within DC, which will trigger the action to run from your forked repository with your IA credentials.
+At this point, the forked add-on will appear when you browse in DC, but will be identically named; you can distinguish your version by looking at "Created By" when opening the add-on or check the URI fragment. <br>
+You can manually configure monitoring tasks from within DC, which will trigger the action to run from your forked repository with your IA credentials. <br>
 
-You will also want to modify the bookmarklet to point to your repository. 
-Modify bookmarklet/klaxon.html to target your forked add-on when your browser session is redirected to DC to specify the rest of the monitoring parameters.  Just change the repo name on line 171 to yours. 
+You will also want to modify the bookmarklet to point to your repository. <br>
+Modify bookmarklet/klaxon.html to target your forked add-on when your browser session is redirected to DC to specify the rest of the monitoring parameters.  Just change the repo name on line 171 to yours. <br>
 
-Publish the bookmarklet to a publicly accessible location (e.g. S3, GCS, your website) and copy the URL to the resource.
-Modify bookmarklet/inject.js to replace all three of the klaxon.html references at the [top of the file](https://github.com/MuckRock/Klaxon/blob/89df26a6ea4433765cc3402c76335b9209cd4e90/bookmarklet/inject.js#L2) with your own. 
-Publish the Javascript inject.js file to a publcly accessible location. 
+Next, publish the bookmarklet to a publicly accessible location (e.g. S3, GCS, your website) and copy the URL to the resource. <br>
+Modify bookmarklet/inject.js to replace all three of the klaxon.html references at the [top of the file](https://github.com/MuckRock/Klaxon/blob/89df26a6ea4433765cc3402c76335b9209cd4e90/bookmarklet/inject.js#L2) with your own. <br>
+Publish the Javascript inject.js file to a publcly accessible location. <br>
 
-Finally, modify the bookmarklet code in your browser (or create a separate bookmarklet) to reference your custom inject.js file instead.
+Finally, modify the bookmarklet code in your browser (or create a separate bookmarklet) to reference your custom inject.js file instead. <br>
 
-Your "Add to Klaxon" bookmarklet will now work the same but send monitoring jobs to your forked add-on instead of the default MuckRock add-on.
+Your "Add to Klaxon" bookmarklet will now work the same but send monitoring jobs to your forked add-on instead of the default MuckRock add-on. <br>
 
 # Notes on rate-limiting
 
-Note that Klaxon relies on savepagenow, a Python library that interacts with the Internet Archive's Wayback Machine. Even authenticated requests with savepagenow are limited to 6 requests/minute. 
+Note that Klaxon relies on [savepagenow](https://pypi.org/project/savepagenow/), a Python library that interacts with the Internet Archive's Wayback Machine. Even authenticated requests with savepagenow are limited to [6 requests/minute](https://palewi.re/docs/savepagenow/python.html#authentication). 
 The MuckRock version of Klaxon has a higher rate limit, so if you plan on running your own version of Klaxon with a lot of users running hourly checks, you may eventually hit rate limits. 
-Klaxon does use tenacity for exponential back-offs for the savepagenow captures, but under high usage, it is still possible for the low default rate limits to cause issues, especially if users are monitoring sites without applying a filter for trivial changes. 
+Klaxon does use [tenacity](https://pypi.org/project/tenacity/) for exponential back-offs on retries for the savepagenow captures, but under high usage, it is still possible for the low default rate limits to cause issues, especially if users are monitoring sites without applying a filter for trivial changes. 
 
 
