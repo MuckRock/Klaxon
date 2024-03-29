@@ -18,8 +18,6 @@ and then save it to your bookmarks. Visit a page you want to monitor and click o
 Fork this repository.
 Generate [Internet Archive (IA) credentials](https://archive.org/developers/tutorial-get-ia-credentials.html)
 
-https://archive.org/account/s3.php
-
 Specify your IA credentials as [GitHub repository secrets](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository) in your forked repository.
 
 The secrets should be named:
