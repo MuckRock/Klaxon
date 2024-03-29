@@ -21,8 +21,8 @@ Generate [Internet Archive (IA) credentials](https://archive.org/developers/tuto
 Specify your IA credentials as [GitHub repository secrets](https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository) in your forked repository.
 
 The secrets should be named:
-SAVEPAGENOW_ACCESS_KEY
-SAVEPAGENOW_SECRET_KEY
+```SAVEPAGENOW_ACCESS_KEY```
+```SAVEPAGENOW_SECRET_KEY```
 
 Enable GitHub action workflows on your fork (navigate to "Actions" on the repository and enable)
 Follow the [DocumentCloud Add-On instructions](https://github.com/MuckRock/documentcloud-hello-world-addon/wiki/#run-your-add-on-in-documentcloud) to authorize your forked add-on within DocumentCloud.
