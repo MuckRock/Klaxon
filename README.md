@@ -47,4 +47,7 @@ Note that Klaxon relies on [savepagenow](https://pypi.org/project/savepagenow/),
 The MuckRock version of Klaxon has a higher rate limit, so if you plan on running your own version of Klaxon with a lot of users running hourly checks, you may eventually hit rate limits. 
 Klaxon does use [tenacity](https://pypi.org/project/tenacity/) for exponential back-offs on retries for the savepagenow captures, but under high usage, it is still possible for the low default rate limits to cause issues, especially if users are monitoring sites without applying a filter for trivial changes. 
 
-
+# Acknowledgements 
+* The Marshall Project Team (especially Tom Meagher)
+* The Internet Archive Team (especially Vangelis Banos & Mark Graham)
+* Gregory Foster
