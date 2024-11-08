@@ -22,7 +22,7 @@ properties:
   filter_selector:
     title: Filter
     type: string
-    description: 'Optional HTML tag that you want to filter out from being compared. Ex: Type a for <a> tags'
+    description: 'Optional HTML tag that you want to filter out from being compared. Ex: Type <code>a</code> for <code>&lt;a&gt;</code> tags'
   slack_webhook:
     title: Slack Webhook
     type: string
