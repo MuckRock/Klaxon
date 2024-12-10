@@ -168,7 +168,7 @@
 
       document.getElementById("edit-button").addEventListener('click', function(e) {
         const urlParams = new URLSearchParams(location.search);
-        window.open(`https://www.documentcloud.org/app?q=%2B` + `&site=${urlParams.get("url")}&selector=${savedSelector}&event=hourly` + '#add-ons/MuckRock/Klaxon');
+        window.open(`https://www.documentcloud.org/add-ons/MuckRock/Klaxon/?site=${urlParams.get("url")}&selector=${savedSelector}&event=hourly`);
       }, false);
 
 
