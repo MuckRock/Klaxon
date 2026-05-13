@@ -1,7 +1,8 @@
-(function() {
+(function () {
   var appRoot = "https://documentcloud-klaxon.s3.amazonaws.com/klaxon.html";
-  var editorURL = "https://documentcloud-klaxon.s3.amazonaws.com/klaxon.html"
-  var postMessageDomain = "https://documentcloud-klaxon.s3.amazonaws.com/klaxon.html";
+  var editorURL = "https://documentcloud-klaxon.s3.amazonaws.com/klaxon.html";
+  var postMessageDomain =
+    "https://documentcloud-klaxon.s3.amazonaws.com/klaxon.html";
 
   var currentURL = window.location.href;
   if (currentURL.indexOf(appRoot) >= 0) {
@@ -14,21 +15,25 @@
     return;
   } else {
     window._klaxonInject = true;
-    console.log('[klaxon booted]');
+    console.log("[klaxon booted]");
   }
 
-  var getCanonicalURL = function() {
+  var getCanonicalURL = function () {
     var og = null;
     var linkRel = null;
     var urlBar = null;
 
     try {
-      og = document.querySelector("meta[property='og:url']").getAttribute("content");
-    } catch(e) { }
+      og = document
+        .querySelector("meta[property='og:url']")
+        .getAttribute("content");
+    } catch (e) {}
 
     try {
-      linkRel = document.querySelector("link[rel='canonical']").getAttribute("href");
-    } catch(e) { }
+      linkRel = document
+        .querySelector("link[rel='canonical']")
+        .getAttribute("href");
+    } catch (e) {}
 
     urlBar = window.location.href;
 
@@ -37,57 +42,59 @@
       return og;
     }
     if (linkRel) {
-      console.log("using link[rel=canonical]")
+      console.log("using link[rel=canonical]");
       return linkRel;
     }
-    console.log("no meta tag for canonical, using url as provided")
+    console.log("no meta tag for canonical, using url as provided");
     return urlBar;
-  }
+  };
 
-  var cssPath = function(el) {
+  var cssPath = function (el) {
     // https://stackoverflow.com/questions/3620116/get-css-path-from-dom-element
     var path = [];
     while (
-      (el.nodeName.toLowerCase() != 'body') &&
-        (el = el.parentNode) &&
-        path.unshift(el.nodeName.toLowerCase() +
-          (el.id ? '#' + el.id : '') +
-            (el.className ? '.' + el.className.replace(/\s+/g, ".") : ''))
+      el.nodeName.toLowerCase() != "body" &&
+      (el = el.parentNode) &&
+      path.unshift(
+        el.nodeName.toLowerCase() +
+          (el.id ? "#" + el.id : "") +
+          (el.className ? "." + el.className.replace(/\s+/g, ".") : ""),
+      )
     );
     return path;
-  }
+  };
 
   var src = editorURL + "?url=" + encodeURIComponent(getCanonicalURL());
-  var iframe = document.createElement('iframe');
-  iframe.setAttribute('src', src);
-  iframe.setAttribute('id', 'klaxon-bookmarklet-iframe');
-  iframe.setAttribute('frameborder', 0);
-  iframe.style.top = '0px';
-  iframe.style.right = '0px';
-  iframe.style.width = '300px';
-  iframe.style.height = (window.innerHeight)+'px';
-  iframe.style.position = 'fixed';
+  var iframe = document.createElement("iframe");
+  iframe.setAttribute("src", src);
+  iframe.setAttribute("id", "klaxon-bookmarklet-iframe");
+  iframe.setAttribute("frameborder", 0);
+  iframe.style.top = "0px";
+  iframe.style.right = "0px";
+  iframe.style.width = "300px";
+  iframe.style.height = window.innerHeight + "px";
+  iframe.style.position = "fixed";
   iframe.style.zIndex = 2147483647; // just a big number, hopefully big enough
   document.body.appendChild(iframe);
-  document.body.setAttribute('cursor', 'grab')
+  document.body.setAttribute("cursor", "grab");
   // var iframe = window.open(src, "Klaxon", "width=200,height=200");
 
-  var styles = document.createElement('style');
-  styles.setAttribute('id', 'klaxon-css-inject');
+  var styles = document.createElement("style");
+  styles.setAttribute("id", "klaxon-css-inject");
   document.body.appendChild(styles);
 
-  var postMessage = function(data) {
+  var postMessage = function (data) {
     var json = JSON.stringify(data);
     iframe.contentWindow.postMessage(json, postMessageDomain);
-  }
+  };
 
-  var lastElement = function(arr) {
-    return arr[arr.length-1];
-  }
+  var lastElement = function (arr) {
+    return arr[arr.length - 1];
+  };
 
   var currentPath = [];
   var savedSelector;
-  var updatePath = function(path) {
+  var updatePath = function (path) {
     currentPath = path;
 
     // var selector = path.join(" ");
@@ -99,10 +106,10 @@
     styles.innerHTML = css;
 
     var matchText = document.querySelector(selector).innerText;
-    postMessage({ event: 'updatePath', value: selector, matchText: matchText })
-  }
+    postMessage({ event: "updatePath", value: selector, matchText: matchText });
+  };
 
-  window.addEventListener('click', function(evt) {
+  window.addEventListener("click", function (evt) {
     if (window._klaxonInject === true) {
       evt.preventDefault();
       var x = evt.clientX;
@@ -111,11 +118,11 @@
       var selector = cssPath(el);
       updatePath(selector);
       savedSelector = lastElement(selector);
-      postMessage({ event: 'click' });
+      postMessage({ event: "click" });
     }
   });
 
-  window.addEventListener('mousemove', function(evt) {
+  window.addEventListener("mousemove", function (evt) {
     if (window._klaxonInject === true) {
       var x = evt.clientX;
       var y = evt.clientY;
@@ -124,18 +131,18 @@
     }
   });
 
-  var receiveMessage = function(event){
-    if (event.data == 'close_klaxon_bookmarklet'){
+  var receiveMessage = function (event) {
+    if (event.data == "close_klaxon_bookmarklet") {
       iframe.parentNode.removeChild(iframe);
-      var style = document.getElementById('klaxon-css-inject');
+      var style = document.getElementById("klaxon-css-inject");
       style.parentNode.removeChild(style);
-     console.log("Closed Klaxon Bookmarklet")
+      console.log("Closed Klaxon Bookmarklet");
       window._klaxonInject = false;
-    } else if (event.data.type == 'update_saved_selector') {
+    } else if (event.data.type == "update_saved_selector") {
       savedSelector = event.data.selector;
-      console.log('Updating saved selector', event.data.selector)
+      console.log("Updating saved selector", event.data.selector);
     }
-  }
+  };
 
   window.addEventListener("message", receiveMessage, false);
 })();

@@ -5,6 +5,7 @@ difflib to compare the archive and the current page,
 uses re to pull the timestamp from the archive result,
 savepagenow to archive pages that are updated.
 """
+
 import difflib
 import os
 import re
