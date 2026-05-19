@@ -32,32 +32,29 @@ class Klaxon(AddOn):
         """Tries to capture the link on Wayback machine with exponential backoff"""
         return savepagenow.capture(site, authenticate=True)
 
-    def retrieve_last_timestamp(self, site):
-        """Retrieves the timestamp for the last snapshot of a site"""
+    def get_wayback_availability(self, site):
+        """Fetches the Wayback availability JSON for a site"""
         archive_test = f"https://archive.org/wayback/available?url={site}"
         headers = {"User-Agent": "Klaxon https://github.com/MuckRock/Klaxon"}
         response = requests_retry_session(retries=10).get(archive_test, headers=headers)
         try:
-            resp_json = response.json()
+            return response.json()
         except requests.exceptions.JSONDecodeError:
             print("JSONDecodeError")
             sys.exit(0)
+
+    def retrieve_last_timestamp(self, site):
+        """Retrieves the timestamp for the last snapshot of a site"""
+        resp_json = self.get_wayback_availability(site)
         if resp_json["archived_snapshots"] != {}:
             return resp_json["archived_snapshots"]["closest"]["timestamp"]
         return None
 
     def check_first_seen(self, site):
         """Checks to see if this site has ever been archived on Wayback"""
-        archive_test = f"https://archive.org/wayback/available?url={site}"
-        headers = {"User-Agent": "Klaxon https://github.com/MuckRock/Klaxon"}
-        response = requests_retry_session(retries=10).get(archive_test, headers=headers)
-        try:
-            resp_json = response.json()
-        except requests.exceptions.JSONDecodeError:
-            print("JSONDecodeError")
-            sys.exit(0)
+        resp_json = self.get_wayback_availability(site)
         if resp_json["archived_snapshots"] == {} and self.site_data == {}:
-            first_seen_url = savepagenow.capture(site, authenticate=True)
+            first_seen_url = self.capture_and_retry(site)
             subject = "Klaxon Alert: New Site Archived"
             message = (
                 f"{site} has never been archived "
