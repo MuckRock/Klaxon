@@ -209,7 +209,7 @@ class Klaxon(AddOn):
             self.set_message("No changes detected on the site")
             sys.exit(0)
         else:
-            print("Elements are updated on this page")
+            self.set_message("Change detected")
             # Generates a list of strings using prettify to pass to difflib
             old_tags = [x.prettify() for x in old_elements]
             new_tags = [y.prettify() for y in new_elements]
@@ -245,6 +245,13 @@ class Klaxon(AddOn):
                     f"New snapshot: {new_archive_url} \n"
                     f"Visual content wayback comparison: {changes_url}",
                 )
+                self.store_run_data(
+                    {
+                        "timestamp": new_timestamp,
+                        "snapshot": new_archive_url,
+                        "compare": changes_url,
+                    }
+                )
             except RetryError:
                 print("Issue with archiving the URL on the Wayback Machine")
                 latest_timestamp = self.retrieve_last_timestamp(site)
@@ -265,7 +272,13 @@ class Klaxon(AddOn):
                         f"Most recent snapshot: {new_archive_url} \n"
                         f"Visual content wayback comparison: {changes_url}",
                     )
-                sys.exit(0)
+                    self.store_run_data(
+                        {
+                            "timestamp": latest_timestamp,
+                            "snapshot": new_archive_url,
+                            "compare": changes_url,
+                        }
+                    )
 
     def main(self):
         # pylint:disable=attribute-defined-outside-init
@@ -279,7 +292,6 @@ class Klaxon(AddOn):
             self.site_data = {}
         self.set_message("Checking the site for updates...")
         self.monitor_with_selector(site, selector)
-        self.set_message("Detection complete")
 
 
 if __name__ == "__main__":
