@@ -32,32 +32,29 @@ class Klaxon(AddOn):
         """Tries to capture the link on Wayback machine with exponential backoff"""
         return savepagenow.capture(site, authenticate=True)
 
-    def retrieve_last_timestamp(self, site):
-        """Retrieves the timestamp for the last snapshot of a site"""
+    def get_wayback_availability(self, site):
+        """Fetches the Wayback availability JSON for a site"""
         archive_test = f"https://archive.org/wayback/available?url={site}"
         headers = {"User-Agent": "Klaxon https://github.com/MuckRock/Klaxon"}
         response = requests_retry_session(retries=10).get(archive_test, headers=headers)
         try:
-            resp_json = response.json()
+            return response.json()
         except requests.exceptions.JSONDecodeError:
             print("JSONDecodeError")
             sys.exit(0)
+
+    def retrieve_last_timestamp(self, site):
+        """Retrieves the timestamp for the last snapshot of a site"""
+        resp_json = self.get_wayback_availability(site)
         if resp_json["archived_snapshots"] != {}:
             return resp_json["archived_snapshots"]["closest"]["timestamp"]
         return None
 
     def check_first_seen(self, site):
         """Checks to see if this site has ever been archived on Wayback"""
-        archive_test = f"https://archive.org/wayback/available?url={site}"
-        headers = {"User-Agent": "Klaxon https://github.com/MuckRock/Klaxon"}
-        response = requests_retry_session(retries=10).get(archive_test, headers=headers)
-        try:
-            resp_json = response.json()
-        except requests.exceptions.JSONDecodeError:
-            print("JSONDecodeError")
-            sys.exit(0)
+        resp_json = self.get_wayback_availability(site)
         if resp_json["archived_snapshots"] == {} and self.site_data == {}:
-            first_seen_url = savepagenow.capture(site, authenticate=True)
+            first_seen_url = self.capture_and_retry(site)
             subject = "Klaxon Alert: New Site Archived"
             message = (
                 f"{site} has never been archived "
@@ -209,7 +206,7 @@ class Klaxon(AddOn):
             self.set_message("No changes detected on the site")
             sys.exit(0)
         else:
-            print("Elements are updated on this page")
+            self.set_message("Change detected")
             # Generates a list of strings using prettify to pass to difflib
             old_tags = [x.prettify() for x in old_elements]
             new_tags = [y.prettify() for y in new_elements]
@@ -245,6 +242,13 @@ class Klaxon(AddOn):
                     f"New snapshot: {new_archive_url} \n"
                     f"Visual content wayback comparison: {changes_url}",
                 )
+                self.store_run_data(
+                    {
+                        "timestamp": new_timestamp,
+                        "snapshot": new_archive_url,
+                        "compare": changes_url,
+                    }
+                )
             except RetryError:
                 print("Issue with archiving the URL on the Wayback Machine")
                 latest_timestamp = self.retrieve_last_timestamp(site)
@@ -265,7 +269,13 @@ class Klaxon(AddOn):
                         f"Most recent snapshot: {new_archive_url} \n"
                         f"Visual content wayback comparison: {changes_url}",
                     )
-                sys.exit(0)
+                    self.store_run_data(
+                        {
+                            "timestamp": latest_timestamp,
+                            "snapshot": new_archive_url,
+                            "compare": changes_url,
+                        }
+                    )
 
     def main(self):
         # pylint:disable=attribute-defined-outside-init
@@ -279,7 +289,6 @@ class Klaxon(AddOn):
             self.site_data = {}
         self.set_message("Checking the site for updates...")
         self.monitor_with_selector(site, selector)
-        self.set_message("Detection complete")
 
 
 if __name__ == "__main__":
