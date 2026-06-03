@@ -287,6 +287,7 @@ class Klaxon(AddOn):
         self.site_data = self.load_event_data()
         if self.site_data is None:
             self.site_data = {}
+        self.client.session.headers.update({'User-Agent': 'Klaxon Add-On'})
         self.set_message("Checking the site for updates...")
         self.monitor_with_selector(site, selector)
 
