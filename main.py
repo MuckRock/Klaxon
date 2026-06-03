@@ -280,6 +280,7 @@ class Klaxon(AddOn):
     def main(self):
         # pylint:disable=attribute-defined-outside-init
         """Gets the site and selector from the Add-On run, checks  calls monitor"""
+        self.client.session.headers.update({'User-Agent': 'Klaxon Add-On'})
         # Gets the site and selector from the front-end yaml
         site = self.data.get("site")
         selector = self.data.get("selector")
@@ -287,7 +288,6 @@ class Klaxon(AddOn):
         self.site_data = self.load_event_data()
         if self.site_data is None:
             self.site_data = {}
-        self.client.session.headers.update({'User-Agent': 'Klaxon Add-On'})
         self.set_message("Checking the site for updates...")
         self.monitor_with_selector(site, selector)
 
