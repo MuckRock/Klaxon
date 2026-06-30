@@ -77,11 +77,16 @@ class Klaxon(AddOn):
             sys.exit(0)
 
     def send_notification(self, subject, message):
-        """Send notifications via slack and email"""
+        """Send notifications via slack, discord or email"""
         self.send_mail(subject, message)
         if self.data.get("slack_webhook"):
             requests_retry_session().post(
                 self.data.get("slack_webhook"), json={"text": f"{subject}\n\n{message}"}
+            )
+        if self.data.get("discord_webhook"):
+            requests_retry_session().post(
+                self.data.get("discord_webhook"),
+                json={"content": f"{subject}\n\n{message}"},
             )
 
     def get_timestamp(self, url):
@@ -280,7 +285,7 @@ class Klaxon(AddOn):
     def main(self):
         # pylint:disable=attribute-defined-outside-init
         """Gets the site and selector from the Add-On run, checks  calls monitor"""
-        self.client.session.headers.update({'User-Agent': 'Klaxon Add-On'})
+        self.client.session.headers.update({"User-Agent": "Klaxon Add-On"})
         # Gets the site and selector from the front-end yaml
         site = self.data.get("site")
         selector = self.data.get("selector")

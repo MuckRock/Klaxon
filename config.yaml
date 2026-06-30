@@ -32,6 +32,11 @@ properties:
     type: string
     format: uri
     description: Enter a slack webhook to enable Slack notifications
+  discord_webhook:
+    title: Discord Webhook
+    type: string
+    format: uri
+    description: Enter a Discord webhook to enable Discord notifications
 required:
   - site
   - selector
