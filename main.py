@@ -77,7 +77,7 @@ class Klaxon(AddOn):
             sys.exit(0)
 
     def send_notification(self, subject, message):
-        """Send notifications via slack, discord or email"""
+        """Send notifications via slack, discord and/or email"""
         self.send_mail(subject, message)
         if self.data.get("slack_webhook"):
             requests_retry_session().post(
