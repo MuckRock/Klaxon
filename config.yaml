@@ -37,9 +37,12 @@ required:
   - selector
 categories:
   - monitor
+custom_disabled_email_footer: "   "
 eventOptions:
   name: site
   events:
     - hourly
     - daily
     - weekly
+
+
