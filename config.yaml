@@ -1,28 +1,32 @@
-title: "Klaxon Cloud: Site Monitor and Alerts" 
-description: >- 
-   Klaxon enables reporters and editors to monitor scores of sites and files on the web for newsworthy changes. 
-   Get email notifications when something changes. Provide a CSS selector to only monitor 
-   portions of a page you are interested in. You may supply * to monitor the entire page, but you may receive alerts for trivial changes.
-   Email alerts are sent to the primary email address on your DocumentCloud account. 
-   To get started, copy the bookmarklet [Add to Klaxon][1] to your bookmarks, 
-   visit a page you are looking to monitor, and then click on the bookmark to activate Klaxon. 
+title: "Klaxon Cloud: Site Monitor and Alerts"
+description: >-
+  Klaxon enables reporters and editors to monitor scores of sites and files on the web for newsworthy changes. 
+  Get email notifications when something changes. Provide a CSS selector to only monitor 
+  portions of a page you are interested in. You may supply * to monitor the entire page, but you may receive alerts for trivial changes.
+  Email alerts are sent to the primary email address on your DocumentCloud account. 
+  To get started, copy the bookmarklet [Add to Klaxon][1] to your bookmarks, 
+  visit a page you are looking to monitor, and then click on the bookmark to activate Klaxon. 
 
-   [1]: javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://documentcloud-klaxon.s3.amazonaws.com/inject.js';})();
-instructions: ''
+  [1]: javascript:(function(){document.body.appendChild(document.createElement('script')).src='https://documentcloud-klaxon.s3.amazonaws.com/inject.js';})();
+instructions: ""
 type: object
 properties:
   site:
     title: Site
     type: string
     format: uri
-  selector: 
+  selector:
     title: Selector
     type: string
     description: CSS Selector on the page you would like to monitor.
   filter_selector:
     title: Filter
     type: string
-    description: 'Optional HTML tag that you want to filter out from being compared. Ex: Type a for <a> tags'
+    description: "Optional HTML tag that you want to filter out from being compared. Ex: Type <code>a</code> for <code>&lt;a&gt;</code> tags"
+  title:
+    title: Title
+    type: string
+    description: "Optional descriptive name for this URL"
   slack_webhook:
     title: Slack Webhook
     type: string
@@ -33,9 +37,12 @@ required:
   - selector
 categories:
   - monitor
+custom_disabled_email_footer: "   "
 eventOptions:
   name: site
   events:
     - hourly
     - daily
     - weekly
+
+
