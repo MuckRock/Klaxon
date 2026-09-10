@@ -39,6 +39,7 @@ required:
   - selector
 categories:
   - monitor
+version: 2
 custom_disabled_email_footer: "   "
 eventOptions:
   name: site
